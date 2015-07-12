@@ -1,4 +1,4 @@
-package beeper-api
+package beeperapi
 
 import (
 	"net/http"
@@ -10,19 +10,19 @@ import (
 )
 
 const (
-	Scheme = "http"
-	TopicPrefix = "topic"
-	PingPrefix = "ping"
+	scheme = "http"
+	topicPrefix = "topic"
+	pingPrefix = "ping"
 )
 
 type Client struct {
-	URL url.URL
+	rurl url.URL
 }
 
 func NewClient(host string) (Client, error) {
 	c := Client{
-		URL: url.URL{
-			Scheme: Scheme,
+		rurl: url.URL{
+			Scheme: scheme,
 			Host: host,
 		},
 	}
@@ -34,14 +34,14 @@ func NewClient(host string) (Client, error) {
 
 func (c Client) Add(topic string) error {
 	out := bytes.NewReader([]byte(topic))
-	c.URL.Path = c.URL.Path + TopicPrefix
-	request, err := http.NewRequest("POST", c.URL.String(), out)
+	c.rurl.Path = c.rurl.Path + topicPrefix
+	request, err := http.NewRequest("POST", c.rurl.String(), out)
 	if err != nil {
 		return errors.New("Bad request")
 	}
 	response, err := http.DefaultClient.Do(request)
 	if err != nil {
-		return errors.New("Сan not connect to " + c.URL.Host)
+		return errors.New("Сan not connect to " + c.rurl.Host)
 	}
 	if response.StatusCode != 200 {
 		return errors.New("Topic already exists")
@@ -50,14 +50,14 @@ func (c Client) Add(topic string) error {
 }
 
 func (c Client) Del(topic string) error {
-	c.URL.Path = c.URL.Path + TopicPrefix + "/" + topic
-	req, err := http.NewRequest("DELETE", c.URL.String(), nil)
+	c.rurl.Path = c.rurl.Path + topicPrefix + "/" + topic
+	req, err := http.NewRequest("DELETE", c.rurl.String(), nil)
 	if err != nil {
 		return errors.New("Can not make request")
 	}
 	r, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return errors.New("Сan not connect to " + c.URL.Host)
+		return errors.New("Сan not connect to " + c.rurl.Host)
 	}
 	if r.StatusCode != 200 {
 		return errors.New("Topic does not exist")
@@ -67,14 +67,14 @@ func (c Client) Del(topic string) error {
 
 func (c Client) Pub(topic string, data string) error {
 	out := bytes.NewReader([]byte(data))
-	c.URL.Path = c.URL.Path + TopicPrefix + "/" + topic
-	request, err := http.NewRequest("POST", c.URL.String(), out)
+	c.rurl.Path = c.rurl.Path + topicPrefix + "/" + topic
+	request, err := http.NewRequest("POST", c.rurl.String(), out)
 	if err != nil {
 		return errors.New("Bad request")
 	}
 	response, err := http.DefaultClient.Do(request)
 	if err != nil {
-		return errors.New("Сan not connect to " + c.URL.Host)
+		return errors.New("Сan not connect to " + c.rurl.Host)
 	}
 	if response.StatusCode != 200 {
 		return errors.New("Topic does not exist")
@@ -84,14 +84,14 @@ func (c Client) Pub(topic string, data string) error {
 
 func (c Client) List() ([]string, error) {
 	list := []string{}
-	c.URL.Path = c.URL.Path + TopicPrefix
-	req, err := http.NewRequest("GET", c.URL.String(), nil)
+	c.rurl.Path = c.rurl.Path + topicPrefix
+	req, err := http.NewRequest("GET", c.rurl.String(), nil)
 	if err != nil {
 		return list, errors.New("Can not make request")
 	}
 	r, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return list, errors.New("Сan not connect to " + c.URL.Host)
+		return list, errors.New("Сan not connect to " + c.rurl.Host)
 	}
 	if r.StatusCode == 500 {
 		return list, errors.New("Server error")
@@ -109,14 +109,14 @@ func (c Client) List() ([]string, error) {
 }
 
 func (c Client) Ping() error {
-	c.URL.Path = c.URL.Path + PingPrefix
-	request, err := http.NewRequest("GET", c.URL.String(), nil)
+	c.rurl.Path = c.rurl.Path + pingPrefix
+	request, err := http.NewRequest("GET", c.rurl.String(), nil)
 	if err != nil {
 		return errors.New("Bad request")
 	}
 	response, err := http.DefaultClient.Do(request)
 	if err != nil {
-		return errors.New("Сan not connect to " + c.URL.Host)
+		return errors.New("Сan not connect to " + c.rurl.Host)
 	}
 	if response.StatusCode != 200 {
 		return errors.New("Service is unavailable")
