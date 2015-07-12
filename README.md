@@ -1,5 +1,5 @@
 # beeper-api
-REST API wrapper for Beeper [Beeper](https://github.com/arvinkulagin/beeper) messaging server
+REST API wrapper for [Beeper](https://github.com/arvinkulagin/beeper) messaging server
 ## PACKAGE DOCUMENTATION
 ```
 import "github.com/arvinkulagin/beeperapi/"
