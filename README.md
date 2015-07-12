@@ -2,7 +2,7 @@
 REST API wrapper for Beeper messaging server
 ## PACKAGE DOCUMENTATION
 ```
-import "github.com/arvinkulagin/beeperapi/beeperapi/"
+import "github.com/arvinkulagin/beeperapi/"
 
 type Client struct {
     // contains filtered or unexported fields
